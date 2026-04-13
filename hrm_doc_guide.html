@@ -1,0 +1,566 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HRM 인사서류 관리 기능 안내</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&family=Noto+Serif+KR:wght@600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --primary: #1a4f8a;
+    --primary-light: #2563b0;
+    --accent: #00b4a6;
+    --accent-light: #e6f7f6;
+    --warn: #f59e0b;
+    --warn-light: #fffbeb;
+    --bg: #f4f6fb;
+    --card: #ffffff;
+    --text: #1c2333;
+    --text-sub: #5a6479;
+    --border: #e2e8f0;
+    --badge-new: #dcfce7;
+    --badge-new-text: #166534;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Noto Sans KR', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* ───── HEADER ───── */
+  .hero {
+    background: linear-gradient(145deg, #0d2f5e 0%, #1a4f8a 50%, #1e6fb5 100%);
+    color: #fff;
+    padding: 48px 24px 56px;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero::before {
+    content: '';
+    position: absolute;
+    top: -60px; right: -60px;
+    width: 200px; height: 200px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.05);
+  }
+  .hero::after {
+    content: '';
+    position: absolute;
+    bottom: -80px; left: -40px;
+    width: 260px; height: 260px;
+    border-radius: 50%;
+    background: rgba(0,180,166,0.12);
+  }
+  .hero-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: rgba(0,180,166,0.25);
+    border: 1px solid rgba(0,180,166,0.5);
+    color: #7fffef;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    padding: 4px 12px;
+    border-radius: 20px;
+    margin-bottom: 16px;
+  }
+  .hero-badge::before { content: '●'; font-size: 7px; animation: blink 1.5s infinite; }
+  @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.3} }
+
+  .hero h1 {
+    font-family: 'Noto Serif KR', serif;
+    font-size: 26px;
+    font-weight: 700;
+    line-height: 1.35;
+    margin-bottom: 12px;
+    position: relative; z-index: 1;
+  }
+  .hero p {
+    font-size: 14px;
+    color: rgba(255,255,255,0.75);
+    line-height: 1.7;
+    position: relative; z-index: 1;
+  }
+  .hero-meta {
+    margin-top: 24px;
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    position: relative; z-index: 1;
+  }
+  .hero-tag {
+    background: rgba(255,255,255,0.12);
+    border: 1px solid rgba(255,255,255,0.2);
+    color: rgba(255,255,255,0.9);
+    font-size: 12px;
+    padding: 4px 12px;
+    border-radius: 12px;
+  }
+
+  /* ───── NOTICE BOX ───── */
+  .notice {
+    margin: -20px 16px 0;
+    background: var(--warn-light);
+    border: 1.5px solid #fcd34d;
+    border-radius: 14px;
+    padding: 16px 18px;
+    display: flex;
+    gap: 12px;
+    align-items: flex-start;
+    position: relative; z-index: 2;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.08);
+  }
+  .notice-icon { font-size: 20px; flex-shrink: 0; margin-top: 1px; }
+  .notice-text strong { display: block; font-size: 13px; color: #92400e; margin-bottom: 4px; }
+  .notice-text p { font-size: 13px; color: #78350f; line-height: 1.6; }
+
+  /* ───── MAIN CONTENT ───── */
+  .container {
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 24px 16px 48px;
+  }
+
+  .section-label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    color: var(--primary);
+    text-transform: uppercase;
+    margin-bottom: 12px;
+    margin-top: 32px;
+  }
+  .section-label::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--border);
+  }
+
+  /* ───── CARD ───── */
+  .card {
+    background: var(--card);
+    border-radius: 16px;
+    padding: 20px;
+    margin-bottom: 12px;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+    border: 1px solid var(--border);
+  }
+  .card-title {
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--text);
+    margin-bottom: 8px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .card-title .icon {
+    width: 32px; height: 32px;
+    border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 16px;
+    flex-shrink: 0;
+  }
+  .card-body {
+    font-size: 14px;
+    color: var(--text-sub);
+    line-height: 1.75;
+  }
+  .card-body strong { color: var(--text); }
+
+  /* ───── 서류 목록 카드 ───── */
+  .doc-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin-top: 4px;
+  }
+  .doc-box {
+    border-radius: 12px;
+    padding: 14px;
+  }
+  .doc-box.enter {
+    background: linear-gradient(135deg, #eff6ff, #dbeafe);
+    border: 1px solid #bfdbfe;
+  }
+  .doc-box.exit {
+    background: linear-gradient(135deg, #fef2f2, #fee2e2);
+    border: 1px solid #fca5a5;
+  }
+  .doc-box-label {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+  }
+  .doc-box.enter .doc-box-label { color: #1d4ed8; }
+  .doc-box.exit .doc-box-label { color: #b91c1c; }
+  .doc-box-count {
+    font-size: 28px;
+    font-weight: 900;
+    line-height: 1;
+    margin-bottom: 4px;
+  }
+  .doc-box.enter .doc-box-count { color: #2563eb; }
+  .doc-box.exit .doc-box-count { color: #dc2626; }
+  .doc-box-unit { font-size: 12px; color: var(--text-sub); font-weight: 400; margin-left: 2px; }
+  .doc-items {
+    margin-top: 8px;
+    list-style: none;
+  }
+  .doc-items li {
+    font-size: 12px;
+    color: var(--text-sub);
+    padding: 3px 0;
+    border-bottom: 1px dashed rgba(0,0,0,0.08);
+    display: flex;
+    align-items: center;
+    gap: 5px;
+  }
+  .doc-items li:last-child { border: none; }
+  .doc-items li::before { content: '·'; font-size: 16px; color: #94a3b8; }
+
+  /* ───── 효과 카드 ───── */
+  .benefit-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-top: 4px;
+  }
+  .benefit-item {
+    display: flex;
+    gap: 12px;
+    align-items: flex-start;
+  }
+  .benefit-num {
+    width: 28px; height: 28px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--primary), var(--accent));
+    color: #fff;
+    font-size: 12px;
+    font-weight: 700;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+  .benefit-content strong {
+    display: block;
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--text);
+    margin-bottom: 3px;
+  }
+  .benefit-content p {
+    font-size: 13px;
+    color: var(--text-sub);
+    line-height: 1.65;
+  }
+
+  /* ───── 향후 활용 ───── */
+  .future-chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 12px;
+  }
+  .chip {
+    background: var(--accent-light);
+    color: #0f766e;
+    border: 1px solid #99f6e4;
+    font-size: 12px;
+    font-weight: 500;
+    padding: 5px 12px;
+    border-radius: 20px;
+  }
+
+  /* ───── CREATOR BOX ───── */
+  .creator-card {
+    background: linear-gradient(135deg, #0d2f5e, #1a4f8a);
+    color: #fff;
+    border-radius: 16px;
+    padding: 20px;
+    display: flex;
+    gap: 14px;
+    align-items: center;
+    margin-bottom: 12px;
+    box-shadow: 0 4px 20px rgba(26,79,138,0.25);
+  }
+  .creator-avatar {
+    width: 48px; height: 48px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.15);
+    border: 2px solid rgba(255,255,255,0.3);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 22px;
+    flex-shrink: 0;
+  }
+  .creator-name { font-size: 16px; font-weight: 700; margin-bottom: 3px; }
+  .creator-role { font-size: 12px; color: rgba(255,255,255,0.7); line-height: 1.5; }
+
+  /* ───── DIVIDER ───── */
+  .divider {
+    height: 1px;
+    background: var(--border);
+    margin: 8px 0 16px;
+  }
+
+  /* ───── FOOTER ───── */
+  .footer {
+    text-align: center;
+    padding: 24px 16px 40px;
+    font-size: 12px;
+    color: #94a3b8;
+    line-height: 1.7;
+  }
+
+  /* ───── STEP FLOW ───── */
+  .step-flow {
+    position: relative;
+    margin-top: 4px;
+  }
+  .step-item {
+    display: flex;
+    gap: 12px;
+    align-items: flex-start;
+    padding-bottom: 16px;
+    position: relative;
+  }
+  .step-item:last-child { padding-bottom: 0; }
+  .step-dot {
+    width: 10px; height: 10px;
+    border-radius: 50%;
+    background: var(--accent);
+    flex-shrink: 0;
+    margin-top: 6px;
+    position: relative; z-index: 1;
+    box-shadow: 0 0 0 3px var(--accent-light);
+  }
+  .step-line {
+    position: absolute;
+    left: 4px; top: 16px; bottom: 0;
+    width: 2px;
+    background: linear-gradient(to bottom, var(--accent), transparent);
+  }
+  .step-text strong {
+    display: block;
+    font-size: 14px;
+    font-weight: 700;
+    margin-bottom: 3px;
+  }
+  .step-text p {
+    font-size: 13px;
+    color: var(--text-sub);
+    line-height: 1.6;
+  }
+
+  /* animations */
+  .card, .notice, .creator-card {
+    animation: fadeUp 0.4s ease both;
+  }
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(12px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+</style>
+</head>
+<body>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-badge">NEW UPDATE</div>
+  <h1>HRM에 인사서류를<br>전자로 관리하게 됩니다 📋</h1>
+  <p>그동안 종이로 받고 보관하던 입·퇴사 서류를<br>이제 HRM 시스템에서 전자서명으로 처리할 수 있습니다.</p>
+  <div class="hero-meta">
+    <span class="hero-tag">📅 2026년 4월 준비 중</span>
+    <span class="hero-tag">🔒 관리자 전용 (오픈 예정)</span>
+  </div>
+</div>
+
+<!-- NOTICE -->
+<div class="notice">
+  <div class="notice-icon">⚠️</div>
+  <div class="notice-text">
+    <strong>지금은 테스트 단계입니다</strong>
+    <p>현재 메뉴는 관리자에게만 보입니다. 아직 미완성 단계이니 실제 업무에 활용하기 전에 정식 오픈 안내를 기다려 주세요.</p>
+  </div>
+</div>
+
+<div class="container">
+
+  <!-- 개발자 소개 -->
+  <div class="section-label">만든 분</div>
+  <div class="creator-card">
+    <div class="creator-avatar">👨‍💻</div>
+    <div>
+      <div class="creator-name">이성진 과장</div>
+      <div class="creator-role">IT팀<br>HRM 시스템 업데이트 개발</div>
+    </div>
+  </div>
+
+  <!-- 왜 만들었나 -->
+  <div class="section-label">왜 필요한가요</div>
+  <div class="card">
+    <div class="card-title">
+      <span class="icon" style="background:#eff6ff;">📂</span>
+      지금까지의 불편함
+    </div>
+    <div class="card-body">
+      입사하거나 퇴사할 때마다 직원과 담당자가 <strong>수많은 서류를 종이로 주고받고, 서명받고, 보관</strong>해야 했습니다. 서류가 많다 보니 빠트리는 것도 생기고, 나중에 찾으려면 파일 캐비닛을 뒤져야 했죠. 연봉제가 본격 시행되면 <strong>매년 연봉계약서</strong>까지 갱신해야 해서 부담이 더 커집니다.
+    </div>
+  </div>
+
+  <!-- 어떤 서류들 -->
+  <div class="section-label">관리 대상 서류</div>
+  <div class="card">
+    <div class="card-title">
+      <span class="icon" style="background:#f0fdf4;">📝</span>
+      입·퇴사 시 필요한 서류 목록
+    </div>
+    <div class="doc-grid">
+      <div class="doc-box enter">
+        <div class="doc-box-label">🟦 입사 시</div>
+        <div class="doc-box-count">8<span class="doc-box-unit">종</span></div>
+        <ul class="doc-items">
+          <li>근로계약서</li>
+          <li>비밀유지 서약서</li>
+          <li>개인정보 수집 동의서</li>
+          <li>기타 서류 등</li>
+        </ul>
+      </div>
+      <div class="doc-box exit">
+        <div class="doc-box-label">🟥 퇴사 시</div>
+        <div class="doc-box-count">5<span class="doc-box-unit">종</span></div>
+        <ul class="doc-items">
+          <li>사직서</li>
+          <li>인수인계서</li>
+          <li>퇴직금 연장 합의서</li>
+          <li>기타 서류 등</li>
+        </ul>
+      </div>
+    </div>
+    <div class="divider" style="margin-top:14px;"></div>
+    <div class="card-body">
+      이 모든 서류를 종이 없이 <strong>HRM 시스템 안에서 전자서명으로 처리</strong>하는 것이 이번 기능의 핵심입니다.
+    </div>
+  </div>
+
+  <!-- 전자계약 어떻게 다른가 -->
+  <div class="section-label">전자계약이 뭔가요</div>
+  <div class="card">
+    <div class="card-title">
+      <span class="icon" style="background:#f0fdf4;">✍️</span>
+      종이서명 vs 전자계약 인증
+    </div>
+    <div class="benefit-list">
+      <div class="benefit-item">
+        <div class="benefit-num">1</div>
+        <div class="benefit-content">
+          <strong>법적 효력이 있습니다</strong>
+          <p>전자서명법에 따라 전자계약 인증 기반의 서명은 종이 서명과 동일한 법적 효력을 가집니다. "전자서명이라 효력이 없지 않냐"는 걱정은 안 하셔도 됩니다.</p>
+        </div>
+      </div>
+      <div class="benefit-item">
+        <div class="benefit-num">2</div>
+        <div class="benefit-content">
+          <strong>반복 양식에 특히 강력합니다</strong>
+          <p>근로계약서, 연봉계약서처럼 <strong>매번 비슷한 양식</strong>을 사용하는 서류에 최적화되어 있습니다. 한 번 양식을 등록해두면 이후에는 클릭 몇 번으로 발송·수신·보관이 완료됩니다.</p>
+        </div>
+      </div>
+      <div class="benefit-item">
+        <div class="benefit-num">3</div>
+        <div class="benefit-content">
+          <strong>출력·보관 부담이 없어집니다</strong>
+          <p>서류를 프린트해서 서명받고 스캔해서 저장하는 번거로운 과정이 사라집니다. 완료된 서류는 HRM에 자동으로 보관됩니다.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 향후 활용 -->
+  <div class="section-label">앞으로 이런 곳에도 활용</div>
+  <div class="card">
+    <div class="card-title">
+      <span class="icon" style="background:#f0fdfa;">🚀</span>
+      확장 가능한 활용 분야
+    </div>
+    <div class="card-body">
+      인사서류 외에도 직원 동의가 필요한 다양한 상황에 적용할 수 있습니다.
+    </div>
+    <div class="future-chips">
+      <span class="chip">📋 연봉계약서 (매년 갱신)</span>
+      <span class="chip">🤝 노조 동의서</span>
+      <span class="chip">🔒 취업규칙 개정 동의</span>
+      <span class="chip">💼 겸직 금지 서약</span>
+      <span class="chip">📊 성과평가 확인서</span>
+      <span class="chip">🏥 복지 신청 동의서</span>
+    </div>
+  </div>
+
+  <!-- 오픈 일정 -->
+  <div class="section-label">오픈 일정</div>
+  <div class="card">
+    <div class="card-title">
+      <span class="icon" style="background:#fefce8;">📅</span>
+      단계적으로 오픈할 예정입니다
+    </div>
+    <div class="step-flow">
+      <div class="step-item">
+        <div class="step-dot"></div>
+        <div class="step-line"></div>
+        <div class="step-text">
+          <strong>현재 · 개발 및 테스트 단계</strong>
+          <p>관리자(인사팀)만 메뉴 확인 가능. 양식 등록 및 기능 점검 중입니다.</p>
+        </div>
+      </div>
+      <div class="step-item">
+        <div class="step-dot"></div>
+        <div class="step-line"></div>
+        <div class="step-text">
+          <strong>준비 완료 후 · 시범 운영</strong>
+          <p>일부 서류부터 먼저 적용하여 실사용 검증을 진행할 예정입니다.</p>
+        </div>
+      </div>
+      <div class="step-item">
+        <div class="step-dot"></div>
+        <div class="step-text">
+          <strong>정식 오픈 · 전사 적용</strong>
+          <p>모든 입·퇴사 서류를 HRM 전자서명으로 처리합니다. 정식 오픈 시 별도 안내를 드리겠습니다.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 문의 -->
+  <div class="card" style="background: linear-gradient(135deg, #f8faff, #eff6ff); border-color: #bfdbfe;">
+    <div class="card-title" style="color: var(--primary);">
+      <span class="icon" style="background:#dbeafe;">💬</span>
+      궁금한 점이 있으시면
+    </div>
+    <div class="card-body">
+      HRM 인사서류 관리 기능에 대한 문의는 <strong>인사총무팀 박천우 과장</strong>에게 연락 주세요. 정식 오픈 전에는 실제 업무 사용을 삼가 주시기 바랍니다.
+    </div>
+  </div>
+
+</div>
+
+<!-- FOOTER -->
+<div class="footer">
+  대림바스 주식회사 · 인사총무팀<br>
+  경영지원부문 내부 공유용 자료 · 2026년 4월
+</div>
+
+</body>
+</html>
